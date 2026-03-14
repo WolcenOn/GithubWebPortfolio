@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Portfolio Visual</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+font-family:Poppins, sans-serif;
+background:#020617;
+color:white;
+min-height:100vh;
+}
+
+header{
+text-align:center;
+padding:80px 20px 40px;
+}
+
+h1{
+font-family:Orbitron;
+font-size:48px;
+letter-spacing:2px;
+}
+
+.search{
+margin-top:25px;
+}
+
+input{
+padding:14px;
+border-radius:10px;
+border:none;
+width:250px;
+}
+
+button{
+padding:14px 18px;
+border-radius:10px;
+border:none;
+margin-left:10px;
+background:linear-gradient(45deg,#6366f1,#22c55e);
+color:white;
+font-weight:600;
+cursor:pointer;
+}
+
+.stats{
+margin-top:20px;
+opacity:.8;
+}
+
+.container{
+max-width:1300px;
+margin:auto;
+padding:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:30px;
+margin-top:40px;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+border-radius:20px;
+overflow:hidden;
+border:1px solid rgba(255,255,255,0.08);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 20px 50px rgba(0,0,0,.7);
+}
+
+.preview{
+width:100%;
+height:180px;
+object-fit:cover;
+background:#000;
+}
+
+.content{
+padding:20px;
+}
+
+.content h3{
+margin-bottom:8px;
+}
+
+.content p{
+font-size:14px;
+opacity:.85;
+min-height:40px;
+}
+
+.meta{
+margin-top:10px;
+font-size:13px;
+opacity:.7;
+}
+
+.buttons{
+margin-top:15px;
+}
+
+.buttons a{
+text-decoration:none;
+padding:8px 14px;
+border-radius:8px;
+margin-right:8px;
+font-size:14px;
+display:inline-block;
+}
+
+.code{background:#3b82f6}
+.demo{background:#22c55e}
+
+.footer{
+text-align:center;
+padding:40px;
+opacity:.5;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🚀 GitHub Portfolio</h1>
+
+<div class="search">
+<input id="username" placeholder="Usuario GitHub">
+<button onclick="loadRepos()">Cargar</button>
+</div>
+
+<div class="stats" id="stats"></div>
+
+</header>
+
+<div class="container">
+<div id="repos" class="grid"></div>
+</div>
+
+<div class="footer">
+Portfolio automático con previews de webs
+</div>
+
+<script>
+
+const savedUser = localStorage.getItem("githubUser")
+
+if(savedUser){
+document.getElementById("username").value=savedUser
+loadRepos()
+}
+
+async function loadRepos(){
+
+const username=document.getElementById("username").value
+localStorage.setItem("githubUser",username)
+
+const container=document.getElementById("repos")
+const stats=document.getElementById("stats")
+
+container.innerHTML="Cargando..."
+
+const res=await fetch(`https://api.github.com/users/${username}/repos`)
+const repos=await res.json()
+
+container.innerHTML=""
+
+let pagesCount=0
+
+repos
+.sort((a,b)=>b.stargazers_count-a.stargazers_count)
+.forEach(repo=>{
+
+let demo=null
+
+if(repo.homepage){
+demo=repo.homepage
+}
+
+if(!demo && repo.has_pages){
+demo=`https://${username}.github.io/${repo.name}`
+}
+
+if(demo) pagesCount++
+
+let preview=""
+
+if(demo){
+preview=`https://image.thum.io/get/width/800/${demo}`
+}
+
+const card=document.createElement("div")
+card.className="card"
+
+card.innerHTML=`
+
+${preview ? `<img class="preview" src="${preview}">` : ""}
+
+<div class="content">
+<h3>${repo.name}</h3>
+
+<p>${repo.description || "Proyecto sin descripción"}</p>
+
+<div class="meta">
+⭐ ${repo.stargazers_count} | 🍴 ${repo.forks_count} | 💻 ${repo.language || "N/A"}
+</div>
+
+<div class="buttons">
+<a class="code" href="${repo.html_url}" target="_blank">Código</a>
+${demo ? `<a class="demo" href="${demo}" target="_blank">Abrir Web</a>` : ""}
+</div>
+</div>
+`
+
+container.appendChild(card)
+
+})
+
+stats.innerHTML=`📦 Repositorios: ${repos.length} &nbsp;&nbsp; 🌐 Webs detectadas: ${pagesCount}`
+
+}
+
+</script>
+
+</body>
+  </html>
+  
