@@ -1,0 +1,10 @@
+{
+  "categoria": "Portfolio",
+  "icono": "👤",
+  "etiquetas": ["github", "portfolio", "web", "repositorios"],
+  "descripcion": "Portfolio web automático para mostrar repositorios de GitHub con previews, categorías y metadatos.",
+  "demo": "",
+  "destacado": true,
+  "orden": 1,
+  "ocultar": false
+}
