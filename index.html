@@ -1,243 +1,919 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GitHub Portfolio Visual</title>
+<title>GitHub Portfolio Visual Clasificado</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-
-*{margin:0;padding:0;box-sizing:border-box}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
 body{
-font-family:Poppins, sans-serif;
-background:#020617;
-color:white;
-min-height:100vh;
+  font-family:Poppins, sans-serif;
+  background:#020617;
+  color:white;
+  min-height:100vh;
 }
 
 header{
-text-align:center;
-padding:80px 20px 40px;
+  text-align:center;
+  padding:80px 20px 40px;
 }
 
 h1{
-font-family:Orbitron;
-font-size:48px;
-letter-spacing:2px;
+  font-family:Orbitron, sans-serif;
+  font-size:clamp(32px, 5vw, 48px);
+  letter-spacing:2px;
+}
+
+.subtitle{
+  margin-top:12px;
+  opacity:.75;
+  font-size:15px;
 }
 
 .search{
-margin-top:25px;
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 input{
-padding:14px;
-border-radius:10px;
-border:none;
-width:250px;
+  padding:14px;
+  border-radius:10px;
+  border:none;
+  width:min(280px, 90vw);
+  outline:none;
+  font-family:Poppins, sans-serif;
 }
 
 button{
-padding:14px 18px;
-border-radius:10px;
-border:none;
-margin-left:10px;
-background:linear-gradient(45deg,#6366f1,#22c55e);
-color:white;
-font-weight:600;
-cursor:pointer;
+  padding:14px 18px;
+  border-radius:10px;
+  border:none;
+  background:linear-gradient(45deg,#6366f1,#22c55e);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  font-family:Poppins, sans-serif;
+  transition:.25s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  opacity:.95;
 }
 
 .stats{
-margin-top:20px;
-opacity:.8;
+  margin-top:20px;
+  opacity:.85;
+  line-height:1.8;
+}
+
+.filters{
+  margin-top:25px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:0 20px;
+}
+
+.filter-btn{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);
+  color:white;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.filter-btn.active{
+  background:linear-gradient(45deg,#6366f1,#22c55e);
 }
 
 .container{
-max-width:1300px;
-margin:auto;
-padding:30px;
+  max-width:1300px;
+  margin:auto;
+  padding:30px;
 }
 
 .grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:30px;
-margin-top:40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:30px;
+  margin-top:40px;
 }
 
 .card{
-background:rgba(255,255,255,0.05);
-border-radius:20px;
-overflow:hidden;
-border:1px solid rgba(255,255,255,0.08);
-transition:.3s;
+  position:relative;
+  background:rgba(255,255,255,0.05);
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.08);
+  transition:.3s;
+}
+
+.card.featured{
+  border-color:rgba(250,204,21,.55);
+  box-shadow:0 0 0 1px rgba(250,204,21,.15);
 }
 
 .card:hover{
-transform:translateY(-8px);
-box-shadow:0 20px 50px rgba(0,0,0,.7);
+  transform:translateY(-8px);
+  box-shadow:0 20px 50px rgba(0,0,0,.7);
+}
+
+.featured-badge{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:2;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(250,204,21,.95);
+  color:#111827;
+  font-size:12px;
+  font-weight:700;
 }
 
 .preview{
-width:100%;
-height:180px;
-object-fit:cover;
-background:#000;
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  background:#000;
+  display:block;
+}
+
+.no-preview{
+  height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg, rgba(99,102,241,.25), rgba(34,197,94,.18));
+  font-size:44px;
 }
 
 .content{
-padding:20px;
+  padding:20px;
 }
 
 .content h3{
-margin-bottom:8px;
+  margin-bottom:8px;
+  word-break:break-word;
 }
 
 .content p{
-font-size:14px;
-opacity:.85;
-min-height:40px;
+  font-size:14px;
+  opacity:.85;
+  min-height:44px;
+  line-height:1.5;
+}
+
+.category{
+  display:inline-block;
+  margin-top:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(99,102,241,.25);
+  border:1px solid rgba(255,255,255,.08);
+  font-size:12px;
+}
+
+.config-source{
+  display:inline-block;
+  margin-top:12px;
+  margin-left:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(34,197,94,.18);
+  border:1px solid rgba(34,197,94,.2);
+  font-size:12px;
+  opacity:.9;
 }
 
 .meta{
-margin-top:10px;
-font-size:13px;
-opacity:.7;
+  margin-top:12px;
+  font-size:13px;
+  opacity:.75;
+}
+
+.topics{
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.topic{
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  opacity:.8;
 }
 
 .buttons{
-margin-top:15px;
+  margin-top:16px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
 }
 
 .buttons a{
-text-decoration:none;
-padding:8px 14px;
-border-radius:8px;
-margin-right:8px;
-font-size:14px;
-display:inline-block;
+  text-decoration:none;
+  padding:8px 14px;
+  border-radius:8px;
+  font-size:14px;
+  display:inline-block;
+  color:white;
 }
 
-.code{background:#3b82f6}
-.demo{background:#22c55e}
+.code{
+  background:#3b82f6;
+}
+
+.demo{
+  background:#22c55e;
+}
+
+.config{
+  background:#a855f7;
+}
+
+.message{
+  text-align:center;
+  opacity:.8;
+  padding:30px;
+  line-height:1.7;
+}
 
 .footer{
-text-align:center;
-padding:40px;
-opacity:.5;
+  text-align:center;
+  padding:40px;
+  opacity:.5;
 }
 
+@media(max-width:520px){
+  header{
+    padding-top:50px;
+  }
+
+  .container{
+    padding:18px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🚀 GitHub Portfolio</h1>
+  <h1>🚀 GitHub Portfolio</h1>
+  <div class="subtitle">
+    Portfolio automático con previews, filtros y clasificación por archivo <strong>portfolio.json</strong>
+  </div>
 
-<div class="search">
-<input id="username" placeholder="Usuario GitHub">
-<button onclick="loadRepos()">Cargar</button>
-</div>
+  <div class="search">
+    <input id="username" placeholder="Usuario GitHub" autocomplete="off">
+    <button onclick="loadRepos()">Cargar</button>
+  </div>
 
-<div class="stats" id="stats"></div>
-
+  <div class="stats" id="stats"></div>
+  <div class="filters" id="filters"></div>
 </header>
 
 <div class="container">
-<div id="repos" class="grid"></div>
+  <div id="repos" class="grid"></div>
 </div>
 
 <div class="footer">
-Portfolio automático con previews de webs
+  Si un repositorio contiene <strong>portfolio.json</strong>, se usa su categoría y sus etiquetas.
+  Si no existe, se clasifica automáticamente.
 </div>
 
 <script>
-
 const savedUser = localStorage.getItem("githubUser")
+let allRepos = []
+let currentCategory = "Todos"
 
 if(savedUser){
-document.getElementById("username").value=savedUser
-loadRepos()
+  document.getElementById("username").value = savedUser
+  loadRepos()
+}
+
+document.getElementById("username").addEventListener("keydown", function(event){
+  if(event.key === "Enter"){
+    loadRepos()
+  }
+})
+
+function escapeHTML(text){
+  return String(text || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;")
+}
+
+function normalizeText(text){
+  return String(text || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+}
+
+function normalizeUrl(url){
+  if(!url){
+    return ""
+  }
+
+  try{
+    const parsed = new URL(url)
+    parsed.hash = ""
+    parsed.search = ""
+
+    let clean = parsed.href.toLowerCase()
+
+    if(clean.endsWith("/")){
+      clean = clean.slice(0, -1)
+    }
+
+    clean = clean.replace("http://", "https://")
+    clean = clean.replace("www.", "")
+
+    return clean
+  }catch(error){
+    return normalizeText(url).replace(/\/$/, "")
+  }
+}
+
+function getRepoKey(repo){
+  return normalizeText(repo.name)
+    .replace(/[^a-z0-9]/g, "")
+}
+
+function getCategoryIcon(category){
+  const icons = {
+    "Lengua": "📝",
+    "Matemáticas": "🧮",
+    "Inglés": "🇬🇧",
+    "Juegos": "🎮",
+    "Escape Rooms": "🔐",
+    "IA": "🤖",
+    "Portfolio": "👤",
+    "Datos": "📊",
+    "Apps": "📱",
+    "Documentación": "📄",
+    "Web": "🌐",
+    "Educación": "📚",
+    "Ciencias": "🔬",
+    "Música": "🎵",
+    "Arte": "🎨",
+    "Otros": "📦"
+  }
+
+  return icons[category] || "🏷️"
+}
+
+function getRules(){
+  return [
+    {
+      category: "Lengua",
+      icon: "📝",
+      keywords: [
+        "lengua", "lectura", "leer", "libro", "cuento", "poesia",
+        "ortografia", "gramatica", "redaccion", "literatura", "comprension",
+        "vocabulario", "sintaxis", "morfologia", "texto", "dictado"
+      ]
+    },
+    {
+      category: "Matemáticas",
+      icon: "🧮",
+      keywords: [
+        "mates", "matematicas", "calculo", "numeros", "numero", "algebra",
+        "geometria", "problemas", "operaciones", "fracciones", "decimales",
+        "ecuaciones", "multiplicacion", "division", "sumas", "restas"
+      ]
+    },
+    {
+      category: "Inglés",
+      icon: "🇬🇧",
+      keywords: [
+        "english", "ingles", "vocabulary", "grammar", "listening", "speaking",
+        "reading", "writing", "verbs", "irregular", "past simple", "present simple"
+      ]
+    },
+    {
+      category: "Juegos",
+      icon: "🎮",
+      keywords: [
+        "game", "juego", "quiz", "trivia", "arcade", "snake", "puzzle",
+        "ahorcado", "memory", "escape", "reto", "ruleta", "rosco", "pasapalabra",
+        "kahoot", "concurso", "adivina"
+      ]
+    },
+    {
+      category: "Escape Rooms",
+      icon: "🔐",
+      keywords: [
+        "escape-room", "escaperoom", "escape room", "candado",
+        "enigmas", "pistas", "detective", "mision", "desafio"
+      ]
+    },
+    {
+      category: "Ciencias",
+      icon: "🔬",
+      keywords: [
+        "ciencia", "ciencias", "biologia", "fisica", "quimica", "experimento",
+        "laboratorio", "celula", "energia", "ecosistema"
+      ]
+    },
+    {
+      category: "Música",
+      icon: "🎵",
+      keywords: [
+        "musica", "music", "cancion", "ritmo", "instrumento", "partitura",
+        "audio", "sonido"
+      ]
+    },
+    {
+      category: "Arte",
+      icon: "🎨",
+      keywords: [
+        "arte", "dibujo", "pintura", "color", "creatividad", "artistico",
+        "imagen", "galeria"
+      ]
+    },
+    {
+      category: "IA",
+      icon: "🤖",
+      keywords: [
+        "ai", "ia", "openai", "chatgpt", "machine learning", "ml", "neural",
+        "modelo", "inteligencia artificial", "prompt", "asistente", "bot"
+      ]
+    },
+    {
+      category: "Portfolio",
+      icon: "👤",
+      keywords: [
+        "portfolio", "cv", "resume", "personal", "perfil", "about me",
+        "presentacion"
+      ]
+    },
+    {
+      category: "Datos",
+      icon: "📊",
+      keywords: [
+        "data", "datos", "dashboard", "chart", "grafico", "csv",
+        "analytics", "estadistica", "visualizacion", "tabla", "informe"
+      ]
+    },
+    {
+      category: "Apps",
+      icon: "📱",
+      keywords: [
+        "app", "react", "vue", "angular", "pwa", "mobile", "android", "ios",
+        "aplicacion"
+      ]
+    },
+    {
+      category: "Documentación",
+      icon: "📄",
+      keywords: [
+        "docs", "documentacion", "wiki", "manual", "guia", "readme", "apuntes"
+      ]
+    },
+    {
+      category: "Web",
+      icon: "🌐",
+      keywords: [
+        "html", "css", "javascript", "web", "landing", "page", "site",
+        "frontend", "website", "pagina"
+      ]
+    },
+    {
+      category: "Educación",
+      icon: "📚",
+      keywords: [
+        "edu", "educacion", "curso", "clase", "alumnos", "profesor",
+        "teacher", "learning", "aprendizaje", "aula", "actividad", "didactica"
+      ]
+    }
+  ]
+}
+
+function classifyRepo(repo, demo){
+  const rules = getRules()
+  const topicsText = normalizeText((repo.topics || []).join(" "))
+
+  /*
+    Topics manuales especiales.
+    Si pones uno de estos topics en GitHub, gana sobre la clasificación automática.
+    Ejemplos: cat-lengua, cat-juegos, cat-ia.
+  */
+  const manualCategories = {
+    "cat-lengua": { name: "Lengua", icon: "📝" },
+    "cat-matematicas": { name: "Matemáticas", icon: "🧮" },
+    "cat-ingles": { name: "Inglés", icon: "🇬🇧" },
+    "cat-juegos": { name: "Juegos", icon: "🎮" },
+    "cat-escape": { name: "Escape Rooms", icon: "🔐" },
+    "cat-ia": { name: "IA", icon: "🤖" },
+    "cat-web": { name: "Web", icon: "🌐" },
+    "cat-portfolio": { name: "Portfolio", icon: "👤" },
+    "cat-datos": { name: "Datos", icon: "📊" },
+    "cat-apps": { name: "Apps", icon: "📱" },
+    "cat-ciencias": { name: "Ciencias", icon: "🔬" },
+    "cat-musica": { name: "Música", icon: "🎵" },
+    "cat-arte": { name: "Arte", icon: "🎨" },
+    "cat-educacion": { name: "Educación", icon: "📚" }
+  }
+
+  for(const topic of repo.topics || []){
+    const normalizedTopic = normalizeText(topic)
+    if(manualCategories[normalizedTopic]){
+      return manualCategories[normalizedTopic]
+    }
+  }
+
+  /*
+    Después se miran los topics normales.
+    Los topics tienen más prioridad que la descripción.
+  */
+  for(const rule of rules){
+    if(rule.keywords.some(keyword => topicsText.includes(normalizeText(keyword)))){
+      return {
+        name: rule.category,
+        icon: rule.icon
+      }
+    }
+  }
+
+  const text = normalizeText(`
+    ${repo.name || ""}
+    ${repo.description || ""}
+    ${repo.language || ""}
+    ${demo || ""}
+  `)
+
+  for(const rule of rules){
+    if(rule.keywords.some(keyword => text.includes(normalizeText(keyword)))){
+      return {
+        name: rule.category,
+        icon: rule.icon
+      }
+    }
+  }
+
+  const language = normalizeText(repo.language)
+
+  if(["html", "css", "javascript", "typescript"].includes(language)){
+    return {
+      name: "Web",
+      icon: "🌐"
+    }
+  }
+
+  return {
+    name: "Otros",
+    icon: "📦"
+  }
+}
+
+async function loadPortfolioConfig(username, repo){
+  /*
+    Este archivo es opcional.
+    Si existe en el repositorio, manda sobre la clasificación automática.
+
+    Rutas que se prueban:
+    - portfolio.json en la rama por defecto del repo.
+    - portfolio.json en main.
+    - portfolio.json en master.
+    - .portfolio.json en la rama por defecto.
+  */
+
+  const candidates = [
+    `https://raw.githubusercontent.com/${username}/${repo.name}/${repo.default_branch}/portfolio.json`,
+    `https://raw.githubusercontent.com/${username}/${repo.name}/main/portfolio.json`,
+    `https://raw.githubusercontent.com/${username}/${repo.name}/master/portfolio.json`,
+    `https://raw.githubusercontent.com/${username}/${repo.name}/${repo.default_branch}/.portfolio.json`
+  ]
+
+  const uniqueCandidates = [...new Set(candidates)]
+
+  for(const url of uniqueCandidates){
+    try{
+      const res = await fetch(url)
+
+      if(res.ok){
+        const config = await res.json()
+        return {
+          ...config,
+          configUrl: url
+        }
+      }
+    }catch(error){
+      console.warn("No se pudo leer portfolio.json en", repo.name, error)
+    }
+  }
+
+  return null
+}
+
+function cleanConfig(config){
+  if(!config || typeof config !== "object"){
+    return null
+  }
+
+  const cleaned = {
+    categoria: typeof config.categoria === "string" ? config.categoria.trim() : "",
+    icono: typeof config.icono === "string" ? config.icono.trim() : "",
+    etiquetas: Array.isArray(config.etiquetas) ? config.etiquetas.filter(Boolean).map(String) : [],
+    descripcion: typeof config.descripcion === "string" ? config.descripcion.trim() : "",
+    demo: typeof config.demo === "string" ? config.demo.trim() : "",
+    destacado: Boolean(config.destacado),
+    orden: Number.isFinite(Number(config.orden)) ? Number(config.orden) : 999,
+    ocultar: Boolean(config.ocultar),
+    configUrl: config.configUrl || ""
+  }
+
+  return cleaned
 }
 
 async function loadRepos(){
+  const username = document.getElementById("username").value.trim()
+  const container = document.getElementById("repos")
+  const stats = document.getElementById("stats")
+  const filters = document.getElementById("filters")
 
-const username=document.getElementById("username").value
-localStorage.setItem("githubUser",username)
+  if(!username){
+    container.innerHTML = `<div class="message">Escribe un usuario de GitHub para cargar el portfolio.</div>`
+    return
+  }
 
-const container=document.getElementById("repos")
-const stats=document.getElementById("stats")
+  localStorage.setItem("githubUser", username)
 
-container.innerHTML="Cargando..."
+  container.innerHTML = `<div class="message">Cargando repositorios...</div>`
+  stats.innerHTML = ""
+  filters.innerHTML = ""
 
-const res=await fetch(`https://api.github.com/users/${username}/repos`)
-const repos=await res.json()
+  try{
+    const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=100&sort=updated`, {
+      headers: {
+        "Accept": "application/vnd.github+json"
+      }
+    })
 
-container.innerHTML=""
+    if(!res.ok){
+      throw new Error("No se han podido cargar los repositorios.")
+    }
 
-let pagesCount=0
+    const repos = await res.json()
 
-repos
-.sort((a,b)=>b.stargazers_count-a.stargazers_count)
-.forEach(repo=>{
+    if(!Array.isArray(repos)){
+      throw new Error("La respuesta de GitHub no tiene el formato esperado.")
+    }
 
-let demo=null
+    const sortedRepos = repos.sort((a,b) => {
+      const stars = b.stargazers_count - a.stargazers_count
+      if(stars !== 0) return stars
 
-if(repo.homepage){
-demo=repo.homepage
+      return new Date(b.updated_at) - new Date(a.updated_at)
+    })
+
+    allRepos = []
+
+    /*
+      Evita páginas duplicadas.
+      Se consideran duplicados:
+      1. Repositorios que apuntan a la misma URL de demo.
+      2. Repositorios con el mismo nombre normalizado.
+
+      Si dos repos parecen duplicados, se conserva el mejor:
+      - Primero el que tenga portfolio.json.
+      - Después el destacado.
+      - Después el que tenga más estrellas.
+      - Después el actualizado más recientemente.
+    */
+    const repoMap = new Map()
+
+    let processed = 0
+
+    for(const repo of sortedRepos){
+      processed++
+      container.innerHTML = `<div class="message">Analizando repositorios... ${processed}/${sortedRepos.length}</div>`
+
+      let demo = null
+
+      if(repo.homepage){
+        demo = repo.homepage
+      }
+
+      if(!demo && repo.has_pages){
+        demo = `https://${username}.github.io/${repo.name}`
+      }
+
+      const rawConfig = await loadPortfolioConfig(username, repo)
+      const config = cleanConfig(rawConfig)
+      const finalDemo = config?.demo || demo
+      const automaticCategory = classifyRepo(repo, finalDemo)
+
+      if(config?.ocultar){
+        continue
+      }
+
+      const finalCategory = config?.categoria || automaticCategory.name
+      const finalIcon = config?.icono || getCategoryIcon(finalCategory) || automaticCategory.icon
+      const finalDescription = config?.descripcion || repo.description || "Proyecto sin descripción"
+
+      const preparedRepo = {
+        ...repo,
+        demo: finalDemo,
+        demoKey: normalizeUrl(finalDemo),
+        repoKey: getRepoKey(repo),
+        portfolioConfig: config,
+        hasPortfolioConfig: Boolean(config),
+        categoryName: finalCategory,
+        categoryIcon: finalIcon,
+        customTags: config?.etiquetas || [],
+        featured: config?.destacado || false,
+        order: config?.orden ?? 999,
+        finalDescription
+      }
+
+      const dedupeKey = preparedRepo.demoKey || preparedRepo.repoKey
+      const existingRepo = repoMap.get(dedupeKey)
+
+      if(!existingRepo){
+        repoMap.set(dedupeKey, preparedRepo)
+      }else{
+        const preparedScore =
+          Number(preparedRepo.hasPortfolioConfig) * 1000000 +
+          Number(preparedRepo.featured) * 100000 +
+          preparedRepo.stargazers_count * 100 +
+          new Date(preparedRepo.updated_at).getTime() / 100000000000
+
+        const existingScore =
+          Number(existingRepo.hasPortfolioConfig) * 1000000 +
+          Number(existingRepo.featured) * 100000 +
+          existingRepo.stargazers_count * 100 +
+          new Date(existingRepo.updated_at).getTime() / 100000000000
+
+        if(preparedScore > existingScore){
+          repoMap.set(dedupeKey, preparedRepo)
+        }
+      }
+    }
+
+    allRepos = [...repoMap.values()]
+
+    allRepos.sort((a,b) => {
+      if(a.featured !== b.featured){
+        return Number(b.featured) - Number(a.featured)
+      }
+
+      if(a.order !== b.order){
+        return a.order - b.order
+      }
+
+      return b.stargazers_count - a.stargazers_count
+    })
+
+    currentCategory = "Todos"
+    renderFilters()
+    renderRepos()
+
+  }catch(error){
+    container.innerHTML = `
+      <div class="message">
+        ⚠️ ${escapeHTML(error.message)}<br>
+        Comprueba que el usuario existe o inténtalo de nuevo más tarde.
+      </div>
+    `
+  }
 }
 
-if(!demo && repo.has_pages){
-demo=`https://${username}.github.io/${repo.name}`
+function renderFilters(){
+  const filters = document.getElementById("filters")
+
+  const categories = [
+    "Todos",
+    ...new Set(allRepos.map(repo => repo.categoryName))
+  ]
+
+  filters.innerHTML = categories.map(category => `
+    <button
+      class="filter-btn ${category === currentCategory ? "active" : ""}"
+      onclick="filterByCategory('${escapeHTML(category)}')">
+      ${escapeHTML(category)}
+    </button>
+  `).join("")
 }
 
-if(demo) pagesCount++
-
-let preview=""
-
-if(demo){
-preview=`https://image.thum.io/get/width/800/${demo}`
+function filterByCategory(category){
+  currentCategory = category
+  renderFilters()
+  renderRepos()
 }
 
-const card=document.createElement("div")
-card.className="card"
+function renderRepos(){
+  const container = document.getElementById("repos")
+  const stats = document.getElementById("stats")
 
-card.innerHTML=`
+  container.innerHTML = ""
 
-${preview ? `<img class="preview" src="${preview}">` : ""}
+  const filteredRepos = currentCategory === "Todos"
+    ? allRepos
+    : allRepos.filter(repo => repo.categoryName === currentCategory)
 
-<div class="content">
-<h3>${repo.name}</h3>
+  const pagesCount = allRepos.filter(repo => repo.demo).length
+  const configCount = allRepos.filter(repo => repo.hasPortfolioConfig).length
 
-<p>${repo.description || "Proyecto sin descripción"}</p>
+  if(filteredRepos.length === 0){
+    container.innerHTML = `<div class="message">No hay repositorios en esta categoría.</div>`
+  }
 
-<div class="meta">
-⭐ ${repo.stargazers_count} | 🍴 ${repo.forks_count} | 💻 ${repo.language || "N/A"}
-</div>
+  filteredRepos.forEach(repo => {
+    const preview = repo.demo
+      ? `https://image.thum.io/get/width/800/${repo.demo}`
+      : ""
 
-<div class="buttons">
-<a class="code" href="${repo.html_url}" target="_blank">Código</a>
-${demo ? `<a class="demo" href="${demo}" target="_blank">Abrir Web</a>` : ""}
-</div>
-</div>
-`
+    const tags = repo.customTags?.length
+      ? repo.customTags
+      : repo.topics || []
 
-container.appendChild(card)
+    const topicsHTML = tags.slice(0, 8).map(topic => `
+      <span class="topic">#${escapeHTML(topic)}</span>
+    `).join("")
 
-})
+    const card = document.createElement("div")
+    card.className = `card ${repo.featured ? "featured" : ""}`
 
-stats.innerHTML=`📦 Repositorios: ${repos.length} &nbsp;&nbsp; 🌐 Webs detectadas: ${pagesCount}`
+    card.innerHTML = `
+      ${repo.featured ? `<div class="featured-badge">⭐ Destacado</div>` : ""}
 
+      ${
+        preview
+          ? `<img class="preview" src="${preview}" alt="Preview de ${escapeHTML(repo.name)}" loading="lazy">`
+          : `<div class="no-preview">${escapeHTML(repo.categoryIcon)}</div>`
+      }
+
+      <div class="content">
+        <h3>${escapeHTML(repo.name)}</h3>
+
+        <p>${escapeHTML(repo.finalDescription)}</p>
+
+        <span class="category">${escapeHTML(repo.categoryIcon)} ${escapeHTML(repo.categoryName)}</span>
+        ${repo.hasPortfolioConfig ? `<span class="config-source">portfolio.json</span>` : ""}
+
+        ${
+          topicsHTML
+            ? `<div class="topics">${topicsHTML}</div>`
+            : ""
+        }
+
+        <div class="meta">
+          ⭐ ${repo.stargazers_count} |
+          🍴 ${repo.forks_count} |
+          💻 ${escapeHTML(repo.language || "N/A")}
+        </div>
+
+        <div class="buttons">
+          <a class="code" href="${repo.html_url}" target="_blank" rel="noopener noreferrer">Código</a>
+          ${repo.demo ? `<a class="demo" href="${repo.demo}" target="_blank" rel="noopener noreferrer">Abrir Web</a>` : ""}
+          ${repo.portfolioConfig?.configUrl ? `<a class="config" href="${repo.portfolioConfig.configUrl}" target="_blank" rel="noopener noreferrer">JSON</a>` : ""}
+        </div>
+      </div>
+    `
+
+    container.appendChild(card)
+  })
+
+  stats.innerHTML = `
+    📦 Repositorios únicos: ${allRepos.length}
+    &nbsp;&nbsp;
+    🌐 Webs detectadas: ${pagesCount}
+    &nbsp;&nbsp;
+    🧩 Con portfolio.json: ${configCount}
+    &nbsp;&nbsp;
+    🏷️ Categoría: ${escapeHTML(currentCategory)}
+  `
 }
-
 </script>
 
 </body>
-  </html>
-  
+</html>
